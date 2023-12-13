@@ -4,6 +4,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 class DatabaseHelper {
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/postgres";
@@ -40,5 +42,28 @@ class DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<HistoryEntry> getAllHistoryEntries() {
+        List<HistoryEntry> entries = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD)) {
+            String query = "SELECT * FROM history";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    int fibnum = resultSet.getInt("fibnum");
+                    int result = resultSet.getInt("result");
+                    String type = resultSet.getString("type");
+
+                    HistoryEntry entry = new HistoryEntry(fibnum, result, type);
+                    entries.add(entry);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entries;
     }
 }

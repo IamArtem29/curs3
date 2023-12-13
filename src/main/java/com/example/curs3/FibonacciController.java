@@ -1,6 +1,8 @@
 package com.example.curs3;
 
-class FibonacciController {
+import java.util.List;
+
+public class FibonacciController {
     private FibonacciModel model;
     private FibonacciView view;
     private DatabaseHelper dbHelper;
@@ -37,5 +39,9 @@ class FibonacciController {
         } catch (NumberFormatException e) {
             view.getResultLabel().setText("Введите число.");
         }
+    }
+
+    public List<HistoryEntry> getAllHistoryEntries() {
+        return dbHelper.getAllHistoryEntries();
     }
 }
